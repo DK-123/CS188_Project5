@@ -42,6 +42,9 @@ class PerceptronModel(Module):
         super(PerceptronModel, self).__init__()
 
         "*** YOUR CODE HERE ***"
+        weight_vector = ones(1, dimensions)
+        self.w = Parameter(weight_vector)
+
 
 
     def get_weights(self):
@@ -61,6 +64,10 @@ class PerceptronModel(Module):
         The pytorch function `tensordot` may be helpful here.
         """
         "*** YOUR CODE HERE ***"
+        x_flat = x.reshape(-1)
+        score =  tensordot(self.w, x_flat, dims=[[1], [0]])
+        return score
+
 
         
 
@@ -73,6 +80,10 @@ class PerceptronModel(Module):
         score = self(x)
 
         "*** YOUR CODE HERE ***"
+        if score.item() >= 0:
+            return 1
+        else:
+            return -1
 
 
 
@@ -87,6 +98,10 @@ class RegressionModel(Module):
         # Initialize your model parameters here
         "*** YOUR CODE HERE ***"
         super().__init__()
+        self.layer1 = Linear(1, 128)
+        self.layer2 = Linear(128, 128)
+        self.layer3 = Linear(128, 64)
+        self.layer4 = Linear(64, 1)
    
 
     def forward(self, x):
@@ -99,6 +114,11 @@ class RegressionModel(Module):
             A node with shape (batch_size x 1) containing predicted y-values
         """
         "*** YOUR CODE HERE ***"
+        output = relu(self.layer1(x))
+        output = relu(self.layer2(output))
+        output = relu(self.layer3(output))
+        output = self.layer4(output)
+        return output
 
 
 class DigitClassificationModel(Module):

@@ -31,6 +31,17 @@ def train_perceptron(model, dataset):
     with no_grad():
         dataloader = DataLoader(dataset, batch_size=1, shuffle=True)
         "*** YOUR CODE HERE ***"
+        converged = False
+        while not converged:
+            converged = True
+            for batch in dataloader:
+                x = batch['x']               
+                label = batch['label'].item() 
+ 
+                prediction = model.get_prediction(x.squeeze())
+                if prediction != label:
+                    model.w.data += x * label
+                    converged = False
 
 
 def train_regression(model, dataset):
@@ -49,6 +60,24 @@ def train_regression(model, dataset):
         
     """
     "*** YOUR CODE HERE ***"
+    optimizer = optim.Adam(model.parameters(), lr = 0.005)
+    dataloader = DataLoader(dataset, batch_size = 64, shuffle = True)
+ 
+    for epoch in range(5000):
+        total_loss = 0.0
+        for batch in dataloader:
+            x = batch['x']
+            y = batch['label']
+            optimizer.zero_grad()
+            y_pred = model(x)
+            loss = regression_loss(y_pred, y)
+            loss.backward()
+            optimizer.step()
+            total_loss += loss.item()
+ 
+        avg_loss = total_loss/len(dataloader)
+        if avg_loss < 0.015:
+            break
 
 
 def train_digitclassifier(model, dataset):
