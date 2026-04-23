@@ -60,7 +60,7 @@ def train_regression(model, dataset):
         
     """
     "*** YOUR CODE HERE ***"
-    optimizer = optim.Adam(model.parameters(), lr = 0.005)
+    optimizer = optim.Adam(model.parameters(), lr = 0.05)
     dataloader = DataLoader(dataset, batch_size = 64, shuffle = True)
  
     for epoch in range(5000):
@@ -86,6 +86,21 @@ def train_digitclassifier(model, dataset):
     """
     model.train()
     """ YOUR CODE HERE """
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
+
+    while True:
+        for batch in dataloader:
+            x = batch['x']
+            y = batch['label']
+            optimizer.zero_grad()
+            y_pred = model(x)
+            loss = digitclassifier_loss(y_pred, y)  
+            loss.backward()
+            optimizer.step()
+
+        if dataset.get_validation_accuracy() >= 0.975:
+            break
 
 
 def train_languageid(model, dataset):

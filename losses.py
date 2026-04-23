@@ -11,7 +11,9 @@ def regression_loss(y_pred, y):
     Returns: a tensor of size 1 containing the loss
     """
     "*** YOUR CODE HERE ***"
-    return mse_loss(y_pred, y)
+    # use mse loss here
+    loss =  mse_loss(y_pred, y)
+    return loss
 
 
 
@@ -29,6 +31,9 @@ def digitclassifier_loss(y_pred, y):
     Returns: a loss tensor
     """
     """ YOUR CODE HERE """
+    # use cross entropy loss here
+    loss = cross_entropy(y_pred, y.argmax(dim=1))
+    return loss
 
 
 def languageid_loss(y_pred, y):

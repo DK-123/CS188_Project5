@@ -141,7 +141,12 @@ class DigitClassificationModel(Module):
         super().__init__()
         input_size = 28 * 28
         output_size = 10
-        "*** YOUR CODE HERE ***"
+        # "*** YOUR CODE HERE ***"
+
+        self.layer1 = Linear(input_size, 400)
+        self.layer2 = Linear(400, 200)
+        self.layer3 = Linear(200, output_size)
+
 
 
     def forward(self, x):
@@ -158,7 +163,11 @@ class DigitClassificationModel(Module):
             A node with shape (batch_size x 10) containing predicted scores
                 (also called logits)
         """
-        """ YOUR CODE HERE """
+        # """ YOUR CODE HERE """
+        output_node = relu(self.layer1(x))
+        output_node = relu(self.layer2(output_node))
+        output_node = self.layer3(output_node)
+        return output_node
 
 
 
