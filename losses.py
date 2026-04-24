@@ -32,7 +32,7 @@ def digitclassifier_loss(y_pred, y):
     """
     """ YOUR CODE HERE """
     # use cross entropy loss here
-    loss = cross_entropy(y_pred, y.argmax(dim=1))
+    loss = cross_entropy(y_pred, y)
     return loss
 
 

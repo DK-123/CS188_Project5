@@ -40,7 +40,7 @@ def train_perceptron(model, dataset):
  
                 prediction = model.get_prediction(x.squeeze())
                 if prediction != label:
-                    model.w.data += x * label
+                    model.w.data += x*label
                     converged = False
 
 
