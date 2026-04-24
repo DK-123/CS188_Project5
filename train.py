@@ -37,7 +37,6 @@ def train_perceptron(model, dataset):
             for batch in dataloader:
                 x = batch['x']               
                 label = batch['label'].item() 
- 
                 prediction = model.get_prediction(x.squeeze())
                 if prediction != label:
                     model.w.data += x*label
