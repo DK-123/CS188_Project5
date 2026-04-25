@@ -189,6 +189,11 @@ class LanguageIDModel(Module):
         super(LanguageIDModel, self).__init__()
         "*** YOUR CODE HERE ***"
         # Initialize your model parameters here
+        d = 200
+        self.layer_new = Linear(self.num_chars , d)
+        self.layer_memory = Linear(d , d)
+        self.layer_output = Linear(d , len(self.languages))
+        
 
 
 
@@ -222,6 +227,13 @@ class LanguageIDModel(Module):
                 (also called logits)
         """
         "*** YOUR CODE HERE ***"
+        for index , x in enumerate(xs):
+            if index == 0:
+                z = relu(self.layer_new(x))
+            else:
+                z = relu(self.layer_new(x) + self.layer_memory(z))
+        return self.layer_output(z)
+            
 
 
 

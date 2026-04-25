@@ -118,6 +118,22 @@ def train_languageid(model, dataset):
     """
     model.train()
     "*** YOUR CODE HERE ***"
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
+
+    while True:
+        for batch in dataloader:
+            x = batch['x']
+            y = batch['label']
+            x = movedim(x, 1, 0)  # swap from (batch x word_length x chars) to (word_length x batch x chars)
+            optimizer.zero_grad()
+            y_pred = model(x)
+            loss = languageid_loss(y_pred, y)
+            loss.backward()
+            optimizer.step()
+
+        if dataset.get_validation_accuracy() >= 0.85:
+            break 
 
 
 
