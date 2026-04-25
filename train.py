@@ -62,7 +62,7 @@ def train_regression(model, dataset):
     optimizer = optim.Adam(model.parameters(), lr = 0.05)
     dataloader = DataLoader(dataset, batch_size = 64, shuffle = True)
  
-    for epoch in range(5000):
+    for i in range(5000):
         total_loss = 0.0
         for batch in dataloader:
             x = batch['x']
@@ -125,7 +125,7 @@ def train_languageid(model, dataset):
         for batch in dataloader:
             x = batch['x']
             y = batch['label']
-            x = movedim(x, 1, 0)  # swap from (batch x word_length x chars) to (word_length x batch x chars)
+            x = movedim(x, 1, 0)  
             optimizer.zero_grad()
             y_pred = model(x)
             loss = languageid_loss(y_pred, y)
@@ -142,3 +142,22 @@ def Train_DigitConvolution(model, dataset):
     Trains the model.
     """
     """ YOUR CODE HERE """
+    learning_rate = 0.001
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+    dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
+
+    while True:
+        for batch in dataloader:
+            x = batch['x']
+            y = batch['label']
+            optimizer.zero_grad()
+            y_pred = model(x)
+            
+            loss = digitconvolution_Loss(y_pred, y)
+            loss.backward()
+            optimizer.step()
+
+        current_accuracy = dataset.get_validation_accuracy()
+        
+        if current_accuracy >= 0.80:
+            break

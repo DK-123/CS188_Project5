@@ -257,6 +257,23 @@ def Convolve(input: tensor, weight: tensor):
     weight_dimensions = weight.shape
     Output_Tensor = tensor(())
     "*** YOUR CODE HERE ***"
+    
+    input_height = input_tensor_dimensions[0]
+    input_width = input_tensor_dimensions[1]
+    weight_height = weight_dimensions[0]
+    weight_width = weight_dimensions[1]
+    out_h = input_height - weight_height + 1
+    out_w = input_width - weight_width + 1
+
+    Output_Tensor = zeros((out_h, out_w))
+
+    for i in range(out_h):
+        for j in range(out_w):
+            p = input[i:i+weight_height, j:j+weight_width]
+            element_wise_product = p*weight
+            row_sums = tensordot(element_wise_product, ones(weight_width), dims=[[1],[0]])
+            total = tensordot(row_sums, ones(weight_height), dims=[[0],[0]])
+            Output_Tensor[i, j] = total
 
     "*** End Code ***"
     return Output_Tensor
@@ -281,6 +298,8 @@ class DigitConvolutionalModel(Module):
 
         self.convolution_weights = Parameter(ones((3, 3)))
         """ YOUR CODE HERE """
+        self.layer1 = Linear(676, 256)
+        self.layer2 = Linear(256, output_size)
 
 
     def forward(self, x):
@@ -294,6 +313,9 @@ class DigitConvolutionalModel(Module):
         )
         x = x.flatten(start_dim=1)
         """ YOUR CODE HERE """
+        output = relu(self.layer1(x))
+        output = self.layer2(output)
+        return output
 
 
 class Attention(Module):
