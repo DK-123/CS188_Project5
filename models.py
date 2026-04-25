@@ -309,12 +309,7 @@ class Attention(Module):
         self.q_layer = Linear(layer_size, layer_size)
         self.v_layer = Linear(layer_size, layer_size)
 
-        # Masking part of attention layer
-        self.register_buffer(
-            "mask",
-            tril(ones(block_size, block_size)).view(1, 1, block_size, block_size),
-        )
-
+        self.register_buffer("mask",tril(ones(block_size, block_size)).view(1, 1, block_size, block_size))
         self.layer_size = layer_size
 
     def forward(self, input):
@@ -333,4 +328,16 @@ class Attention(Module):
         B, T, C = input.size()
 
         """YOUR CODE HERE"""
+        Q = self.q_layer(input)   
+        K = self.k_layer(input)   
+        V = self.v_layer(input)   
+
+        K_T = movedim(K, 1, 2)                       
+        scores = matmul(Q, K_T)/(self.layer_size ** 0.5)  
+        scores = scores.unsqueeze(0)                  
+        scores = scores.masked_fill(self.mask[:,:,:T,:T] == 0, float('-inf'))[0]
+        scores = softmax(scores, dim=-1)              
+        output = matmul(scores, V)    
+
+        return output
 
